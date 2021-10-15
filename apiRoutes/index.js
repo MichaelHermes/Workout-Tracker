@@ -15,6 +15,13 @@ router.get('/api/workouts/range', async (req, res) => {});
 
 router.put('/api/workouts/:id', async (req, res) => {});
 
-router.post('/api/workouts', async (req, res) => {});
+router.post('/api/workouts', async (req, res) => {
+	try {
+		const workout = await db.Workout.create(req.body);
+		res.json(workout);
+	} catch (error) {
+		res.json(error);
+	}
+});
 
 module.exports = router;

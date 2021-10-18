@@ -19,7 +19,11 @@ app.use(apiRoutes);
 
 mongoose.connect(
 	process.env.MONGODB_URI || 'mongodb://localhost/workouttracker',
-	{ useNewUrlParser: true }
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+	}
 );
 
 /** Add routing for HTML pages (i.e. views).

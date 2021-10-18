@@ -72,8 +72,8 @@ router.get('/api/workouts/range', async (req, res) => {
 router.put('/api/workouts/:id', async (req, res) => {
 	try {
 		const exercise = await db.Exercise.create(req.body);
-		const workout = await db.Workout.findOneAndUpdate(
-			{ _id: req.params.id },
+		const workout = await db.Workout.findByIdAndUpdate(
+			req.params.id,
 			{ $push: { exercises: exercise._id } },
 			{ new: true }
 		).exec();

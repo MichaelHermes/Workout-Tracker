@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const db = require('../models');
 
+/**
+ * Route to obtain all workouts with associated exercise details.
+ */
 router.get('/api/workouts', async (req, res) => {
 	try {
 		const workouts = await db.Workout.aggregate([
@@ -26,6 +29,9 @@ router.get('/api/workouts', async (req, res) => {
 	}
 });
 
+/**
+ * Route to obtain the 7 most recent workouts with associated exercise details.
+ */
 router.get('/api/workouts/range', async (req, res) => {
 	try {
 		const workouts = await db.Workout.aggregate([
@@ -60,6 +66,9 @@ router.get('/api/workouts/range', async (req, res) => {
 	}
 });
 
+/**
+ * Route to add an exercise to an existing workout, specified by 'id'.
+ */
 router.put('/api/workouts/:id', async (req, res) => {
 	try {
 		const exercise = await db.Exercise.create(req.body);
@@ -74,6 +83,9 @@ router.put('/api/workouts/:id', async (req, res) => {
 	}
 });
 
+/**
+ * Route to create a new workout.
+ */
 router.post('/api/workouts', async (req, res) => {
 	try {
 		const workout = await db.Workout.create(req.body);

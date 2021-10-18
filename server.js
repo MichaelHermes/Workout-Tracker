@@ -6,8 +6,6 @@ const apiRoutes = require('./apiRoutes');
 
 const PORT = process.env.PORT || 3000;
 
-//const db = require('./models');
-
 const app = express();
 
 app.use(logger('dev'));
@@ -24,6 +22,8 @@ mongoose.connect(
 	{ useNewUrlParser: true }
 );
 
+/** Add routing for HTML pages (i.e. views).
+ * Due to the simplicity of these routes, they are implemented in this server.js file instead of a separaqte 'homeroutes.js' file.*/
 // GET route for the homepage
 app.get('/', (req, res) =>
 	res.sendFile(path.join(__dirname, '/public/index.html'))

@@ -3,9 +3,24 @@ const db = require('../models');
 
 router.get('/api/workouts', async (req, res) => {
 	try {
-		// We use '.exec()' here to obtain a more complete stacktrace in the event of an error, per the Mongoosejs documentation...
-		const workout = await db.Workout.find({}).populate('exercises').exec();
-		res.json(workout);
+		const workouts = await db.Workout.aggregate([
+			{
+				$lookup: {
+					from: 'exercises',
+					localField: 'exercises',
+					foreignField: '_id',
+					as: 'exercises',
+				},
+			},
+			{
+				$addFields: {
+					totalDuration: {
+						$sum: '$exercises.duration',
+					},
+				},
+			},
+		]);
+		res.json(workouts);
 	} catch (error) {
 		res.json(error);
 	}
@@ -13,17 +28,33 @@ router.get('/api/workouts', async (req, res) => {
 
 router.get('/api/workouts/range', async (req, res) => {
 	try {
-		const workouts = await db.Workout.find({})
-			.populate('exercises')
-			.sort({ day: -1 })
-			.limit(7)
-			.exec();
-		console.log(workouts);
-		workouts.forEach(workout => {
-			workout.exercises.forEach(exercise => {
-				console.log(exercise);
-			});
-		});
+		const workouts = await db.Workout.aggregate([
+			{
+				$lookup: {
+					from: 'exercises',
+					localField: 'exercises',
+					foreignField: '_id',
+					as: 'exercises',
+				},
+			},
+			{
+				$sort: {
+					day: -1,
+				},
+			},
+			{
+				$limit: 7,
+			},
+			{
+				$addFields: {
+					totalDuration: {
+						$sum: '$exercises.duration',
+					},
+				},
+			},
+		]);
+
+		res.json(workouts);
 	} catch (error) {
 		res.json(error);
 	}
